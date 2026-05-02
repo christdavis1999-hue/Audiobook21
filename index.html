@@ -192,27 +192,27 @@
       </div>
       <div class="book-list" id="bookList"></div>
       <div style="border-top:0.5px solid var(--border);flex-shrink:0;">
-        <div class="sidebar-section-label">ElevenLabs Key</div>
-        <div class="api-bar">
-          <input type="password" id="apiKeyInput" placeholder="sk_..." />
-          <button class="api-save" onclick="toggleVis('apiKeyInput','eyeIcon')" style="font-size:15px;padding:5px 8px;">
-            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <div style="padding:0.4rem 0.75rem 0.2rem;font-size:10px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;">ElevenLabs</div>
+        <div style="display:flex;align-items:center;gap:4px;padding:0 0.5rem 0.25rem;">
+          <input type="password" id="apiKeyInput" placeholder="sk_..." style="flex:1;font-size:11px;padding:5px 7px;background:var(--bg3);border:0.5px solid var(--border);border-radius:6px;color:var(--text);font-family:monospace;min-width:0;"/>
+          <button onclick="toggleVis('apiKeyInput','eyeIcon')" style="background:transparent;border:0.5px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;padding:4px 6px;font-size:12px;flex-shrink:0;">
+            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
-          <button class="api-save" onclick="saveApiKey()">Save</button>
+          <button onclick="saveApiKey()" style="background:transparent;border:0.5px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;padding:4px 8px;font-size:11px;flex-shrink:0;font-family:'DM Sans',sans-serif;">Save</button>
         </div>
-        <div style="padding:0 0.75rem 0.4rem;">
-          <button class="api-save" style="width:100%;text-align:center;" onclick="testApiKey()">Test connection</button>
+        <div style="padding:0 0.5rem 0.3rem;">
+          <button onclick="testApiKey()" style="width:100%;background:transparent;border:0.5px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;padding:4px;font-size:11px;font-family:'DM Sans',sans-serif;">Test connection</button>
         </div>
-        <div id="apiTestResult" style="padding:0 0.75rem 0.4rem;font-size:11px;color:var(--muted);display:none;line-height:1.4;"></div>
-        <div class="sidebar-section-label">HuggingFace Token</div>
-        <div class="api-bar">
-          <input type="password" id="hfKeyInput" placeholder="hf_..." style="font-family:monospace;" />
-          <button class="api-save" onclick="toggleVis('hfKeyInput','hfEyeIcon')" style="font-size:15px;padding:5px 8px;">
-            <svg id="hfEyeIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <div id="apiTestResult" style="padding:0 0.75rem 0.3rem;font-size:10px;color:var(--muted);display:none;line-height:1.4;"></div>
+        <div style="padding:0.2rem 0.75rem 0.2rem;font-size:10px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;">HuggingFace</div>
+        <div style="display:flex;align-items:center;gap:4px;padding:0 0.5rem 0.25rem;">
+          <input type="password" id="hfKeyInput" placeholder="hf_..." style="flex:1;font-size:11px;padding:5px 7px;background:var(--bg3);border:0.5px solid var(--border);border-radius:6px;color:var(--text);font-family:monospace;min-width:0;"/>
+          <button onclick="toggleVis('hfKeyInput','hfEyeIcon')" style="background:transparent;border:0.5px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;padding:4px 6px;font-size:12px;flex-shrink:0;">
+            <svg id="hfEyeIcon" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
-          <button class="api-save" onclick="saveHfKey()">Save</button>
+          <button onclick="saveHfKey()" style="background:transparent;border:0.5px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;padding:4px 8px;font-size:11px;flex-shrink:0;font-family:'DM Sans',sans-serif;">Save</button>
         </div>
-        <div class="sidebar-note" style="padding:0 0.75rem 0.5rem;">Free at <a href="https://huggingface.co/settings/tokens" target="_blank">huggingface.co</a></div>
+        <div style="padding:0 0.75rem 0.5rem;font-size:10px;color:var(--muted);">Free at <a href="https://huggingface.co/settings/tokens" target="_blank" style="color:var(--gold);">huggingface.co</a></div>
       </div>
     </div>
     <div class="chapters-panel">

@@ -366,6 +366,9 @@
             <button onclick="downloadChapter()" id="downloadBtn" style="flex:1;font-size:12px;padding:7px 14px;background:transparent;border:0.5px solid var(--border);border-radius:var(--radius);color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
               ↓ Download chapter audio
             </button>
+            <button onclick="generateAndDownload()" id="genDownloadBtn" style="flex:1;font-size:12px;padding:7px 14px;background:rgba(212,168,75,0.1);border:0.5px solid rgba(212,168,75,0.3);border-radius:var(--radius);color:var(--gold);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;" onmouseover="this.style.background='rgba(212,168,75,0.2)'" onmouseout="this.style.background='rgba(212,168,75,0.1)'">
+              ⚡ Generate &amp; Download
+            </button>
           </div>
           <div class="segments-box" id="segmentsBox">
             <div class="no-segs">Switch to Story Text, paste your text, then come back here.</div>
@@ -416,9 +419,19 @@ Paste your chapter text below this line, then hit send:
         <strong style="color:var(--gold);">Tip:</strong> Unknown characters appear as <strong style="color:var(--text);">Character1</strong>, <strong style="color:var(--text);">Character2</strong> etc. Assign each a voice in the Character Voices tab.
       </div>
       <textarea class="conv-textarea" id="convInput" placeholder="Narrator: It was a dark and stormy night..." style="min-height:160px;margin-bottom:10px;" oninput="autoDecodeConvInput()"></textarea>
-      <div style="display:flex;gap:10px;">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
         <button class="conv-btn primary" onclick="sendToReader()">Send to book →</button>
         <button class="conv-btn" onclick="copyConvOutput2()">Copy</button>
+        <button class="conv-btn" id="autoDownloadBtn" onclick="autoConvertAndDownload()" style="background:rgba(212,168,75,0.15);border-color:rgba(212,168,75,0.4);color:var(--gold);">⚡ Generate &amp; Download audio</button>
+      </div>
+      <div id="autoDownloadStatus" style="display:none;margin-top:10px;padding:10px;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <div class="conv-spinner on" id="autoSpinner"></div>
+          <span id="autoStatusText" style="font-size:13px;color:var(--muted);">Starting...</span>
+        </div>
+        <div style="width:100%;height:3px;background:var(--border);border-radius:2px;overflow:hidden;">
+          <div id="autoProgressFill" style="height:100%;background:var(--gold);border-radius:2px;width:0%;transition:width 0.3s;"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -810,7 +823,7 @@ async function generateLine(i) {
     try {
       if (voiceId.startsWith('kokoro:')) {
         const s = getCharSettings(seg.char);
-        const res = await fetch('http://localhost:8787',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:seg.text,voice:voiceId.slice(7),speed:s.speed})});
+        const res = await fetch('https://asgrtkidtsduk-kokoro-tts.hf.space',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:seg.text,voice:voiceId.slice(7),speed:s.speed})});
         if (res.ok) audioCache[cacheKey] = URL.createObjectURL(await res.blob());
       } else {
         const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,{method:'POST',headers:{'Content-Type':'application/json','xi-api-key':apiKey},body:JSON.stringify({text:seg.text,model_id:'eleven_multilingual_v2',voice_settings:{stability:0.5,similarity_boost:0.75}})});
@@ -980,7 +993,7 @@ async function speakKokoro(text, voiceId, char) {
   try {
     showLoading('Generating Kokoro voice...');
     const s = getCharSettings(char);
-    const res = await fetch('http://localhost:8787',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,voice:voiceId,speed:s.speed})});
+    const res = await fetch('https://asgrtkidtsduk-kokoro-tts.hf.space',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,voice:voiceId,speed:s.speed})});
     if (!res.ok) { hideLoading(); showToast('Kokoro error '+res.status,true); await speakBrowser(text,char); return; }
     const url = URL.createObjectURL(await res.blob()); audioCache[cacheKey] = url; hideLoading();
     return playAudioWithSettings(url, char);
@@ -1059,7 +1072,7 @@ async function downloadChapter() {
       const cacheKey=(voiceId.startsWith('kokoro:')?'kokoro:'+voiceId.slice(7):voiceId)+'::'+seg.text;
       let audioUrl = audioCache[cacheKey] || null;
       if (!audioUrl) {
-        if (voiceId.startsWith('kokoro:')) { const s=getCharSettings(seg.char); const res=await fetch('http://localhost:8787',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:seg.text,voice:voiceId.slice(7),speed:s.speed})}); if(res.ok){const blob=await res.blob();audioUrl=URL.createObjectURL(blob);audioCache[cacheKey]=audioUrl;} }
+        if (voiceId.startsWith('kokoro:')) { const s=getCharSettings(seg.char); const res=await fetch('https://asgrtkidtsduk-kokoro-tts.hf.space',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:seg.text,voice:voiceId.slice(7),speed:s.speed})}); if(res.ok){const blob=await res.blob();audioUrl=URL.createObjectURL(blob);audioCache[cacheKey]=audioUrl;} }
         else { const res=await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,{method:'POST',headers:{'Content-Type':'application/json','xi-api-key':apiKey},body:JSON.stringify({text:seg.text,model_id:'eleven_multilingual_v2',voice_settings:{stability:0.5,similarity_boost:0.75}})}); if(res.ok){const blob=await res.blob();audioUrl=URL.createObjectURL(blob);audioCache[cacheKey]=audioUrl;} }
       }
       if (audioUrl) { const resp=await fetch(audioUrl); const buf=await resp.arrayBuffer(); audioBuffers.push({buf,char:seg.char}); }
@@ -1229,6 +1242,113 @@ function autoDecodeConvInput() {
       // Not valid URL encoding, leave it alone
     }
   }
+}
+
+// ── AUTO GENERATE & DOWNLOAD ──
+// Called from Reader tab — generates all audio for current chapter then downloads
+async function generateAndDownload() {
+  const book = getCurrentBook();
+  const chapter = getCurrentChapter();
+  if (!chapter) { showToast('No chapter selected', true); return; }
+
+  const btn = document.getElementById('genDownloadBtn');
+  btn.textContent = 'Working...';
+  btn.disabled = true;
+
+  // Make sure segments are loaded
+  const text = document.getElementById('storyText')?.value || chapter.text || '';
+  segments = parseSegments(text);
+  if (!segments.length) { showToast('No story text found', true); btn.textContent = '⚡ Generate & Download'; btn.disabled = false; return; }
+
+  // Generate all audio
+  const total = segments.length;
+  for (let i = 0; i < total; i++) {
+    btn.textContent = `Generating ${i+1}/${total}...`;
+    await generateLine(i);
+  }
+
+  // Now download
+  btn.textContent = 'Stitching...';
+  await downloadChapter();
+  btn.textContent = '⚡ Generate & Download';
+  btn.disabled = false;
+}
+
+// Called from Converter — takes pasted converted text, assigns voices from roster, generates audio, downloads
+async function autoConvertAndDownload() {
+  const text = document.getElementById('convInput').value.trim();
+  if (!text) { showToast('Paste converted text first', true); return; }
+  if (!books.length) { showToast('Create a book first', true); return; }
+
+  const btn = document.getElementById('autoDownloadBtn');
+  const statusDiv = document.getElementById('autoDownloadStatus');
+  const statusText = document.getElementById('autoStatusText');
+  const progressFill = document.getElementById('autoProgressFill');
+
+  btn.disabled = true;
+  statusDiv.style.display = 'block';
+
+  const setStatus = (msg, pct) => {
+    statusText.textContent = msg;
+    progressFill.style.width = pct + '%';
+  };
+
+  try {
+    // Step 1: Parse segments from the converted text
+    setStatus('Parsing text...', 5);
+    const segs = parseSegments(text);
+    if (!segs.length) { showToast('No valid lines found in text', true); return; }
+
+    // Step 2: Pick book — use currently selected book or first book
+    const book = getCurrentBook() || books[0];
+    if (!book) { showToast('No book found', true); return; }
+
+    // Step 3: Create a temp chapter
+    if (!book.chapters) book.chapters = [];
+    const num = book.chapters.length + 1;
+    const chapter = { id: Date.now().toString(), num, title: 'Chapter ' + num, text, charVoices: {} };
+
+    // Step 4: Auto-assign voices from book roster
+    setStatus('Matching voices from roster...', 10);
+    const chars = getUniqueChars(segs);
+    chars.forEach(char => {
+      const rosterKey = displayName(char).toLowerCase();
+      const rosterVoice = book.voiceRoster?.[rosterKey]?.voiceId;
+      if (rosterVoice) {
+        chapter.charVoices[char] = rosterVoice;
+        const bm = char.match(/\[(\d+)\]$/);
+        if (bm) chapter.charVoices['Character' + bm[1]] = rosterVoice;
+      }
+    });
+
+    // Add chapter to book temporarily
+    book.chapters.push(chapter);
+    currentBookId = book.id;
+    currentChapterId = chapter.id;
+    segments = segs;
+    saveBooks();
+
+    // Step 5: Generate all audio
+    const total = segs.length;
+    for (let i = 0; i < total; i++) {
+      setStatus(`Generating line ${i+1} of ${total}...`, 10 + Math.round((i/total)*80));
+      await generateLine(i);
+    }
+
+    // Step 6: Download
+    setStatus('Stitching and downloading...', 92);
+    await downloadChapter();
+
+    setStatus('Done! Check your downloads folder.', 100);
+    setTimeout(() => { statusDiv.style.display = 'none'; progressFill.style.width = '0%'; }, 3000);
+
+  } catch(e) {
+    showToast('Error: ' + e.message, true);
+    statusDiv.style.display = 'none';
+  }
+
+  btn.disabled = false;
+  btn.textContent = '⚡ Generate & Download audio';
 }
 
 function sendToReader() {

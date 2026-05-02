@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 <title>StoryVoice — Audiobook Reader</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
@@ -171,6 +171,87 @@
   .main { flex: 1 !important; min-width: 0 !important; width: 0 !important; display: flex !important; flex-direction: column !important; height: 100% !important; overflow: hidden !important; }
   #chaptersContent { flex: 1 !important; overflow-y: auto !important; min-height: 0 !important; }
   .book-list { flex: 1 !important; overflow-y: auto !important; min-height: 0 !important; }
+
+  /* ── MOBILE RESPONSIVE ── */
+  @media (max-width: 768px) {
+    header { padding: 0.75rem 1rem; height: 52px; }
+    .logo { font-size: 18px; }
+    .nav-btn { font-size: 12px; padding: 5px 10px; }
+
+    /* Stack sidebar on top, main content below */
+    .app { flex-direction: column !important; height: auto !important; overflow: visible !important; }
+    .reader-page { height: auto !important; overflow: visible !important; }
+
+    /* Sidebar becomes horizontal top bar */
+    .sidebar { width: 100% !important; min-width: 100% !important; max-width: 100% !important; height: auto !important; flex-direction: column !important; border-right: none !important; border-bottom: 0.5px solid var(--border); }
+
+    /* Books and chapters side by side in mobile */
+    .books-panel { width: 100% !important; min-width: 100% !important; max-width: 100% !important; height: auto !important; flex-direction: row !important; flex-shrink: 1 !important; border-right: none !important; overflow: visible !important; }
+
+    /* Book list scrolls horizontally */
+    .book-list { display: flex !important; flex-direction: row !important; overflow-x: auto !important; overflow-y: hidden !important; padding: 0.4rem !important; gap: 6px; height: 64px; flex: 1; min-height: 0 !important; }
+    .book-item { min-width: 120px; margin-bottom: 0 !important; padding: 0.4rem 0.6rem !important; flex-shrink: 0; }
+    .book-item-title { font-size: 12px; }
+    .book-item-meta { font-size: 10px; }
+
+    /* API keys hidden on mobile by default — accessible via settings */
+    .books-panel > div:last-child { display: none !important; }
+
+    /* Chapters panel full width */
+    .chapters-panel { width: 100% !important; height: auto !important; overflow: visible !important; border-top: 0.5px solid var(--border); }
+    #chaptersContent { max-height: 120px !important; overflow-y: auto !important; }
+    .chapter-list { display: flex !important; flex-direction: row !important; overflow-x: auto !important; overflow-y: hidden !important; padding: 0.4rem !important; gap: 6px; }
+    .chapter-item { min-width: 130px; flex-shrink: 0; padding: 0.4rem 0.6rem !important; }
+    .chapter-item-title { font-size: 12px; }
+    .chapter-item-num { font-size: 9px; }
+    .chapter-item-meta { font-size: 10px; }
+    .chapters-head { padding: 0.5rem 0.75rem; }
+
+    /* Main area full width */
+    .main { width: 100% !important; min-width: 100% !important; height: auto !important; overflow: visible !important; }
+    .book-editor { overflow: visible !important; min-height: 0 !important; }
+
+    /* Tabs smaller */
+    .tab { padding: 0.6rem 0.75rem; font-size: 12px; }
+    .editor-top { padding: 0.75rem 1rem; }
+    .book-title-input { font-size: 16px; }
+
+    /* Tab content scrollable */
+    .tab-content { overflow-y: auto !important; max-height: calc(100vh - 52px - 180px); padding: 0.75rem !important; }
+    #tab-reader { overflow-y: auto !important; max-height: calc(100vh - 52px - 180px); padding: 0.5rem !important; }
+
+    /* Reader panel */
+    .reader-panel { height: auto !important; gap: 0.5rem; }
+    .segments-box { min-height: 300px; max-height: 400px; }
+    .playback-controls { padding: 0.6rem 0.75rem; }
+    .play-btn { width: 36px; height: 36px; font-size: 13px; }
+    .stop-btn { width: 30px; height: 30px; font-size: 11px; }
+
+    /* Voice grid */
+    .voice-row { padding: 0.6rem 0.75rem; }
+    .voice-row-top { flex-wrap: wrap; gap: 6px; }
+    .char-pill { min-width: 70px; font-size: 11px; padding: 3px 8px; }
+    .voice-select { font-size: 12px; min-width: 0; }
+    .voice-id-input { width: 100% !important; }
+
+    /* Converter */
+    .converter-page { padding: 1rem !important; }
+
+    /* Toast above bottom */
+    .toast { bottom: 0.75rem; right: 0.75rem; left: 0.75rem; font-size: 12px; }
+
+    /* Image popup smaller on mobile */
+    .img-popup { width: 220px !important; bottom: 1rem; right: 1rem; }
+  }
+
+  @media (max-width: 480px) {
+    .tab { padding: 0.5rem 0.6rem; font-size: 11px; }
+    .book-item { min-width: 100px; }
+    .chapter-item { min-width: 110px; }
+    .segments-box { min-height: 250px; max-height: 320px; }
+    .tab-content { max-height: calc(100vh - 52px - 200px); }
+    #tab-reader { max-height: calc(100vh - 52px - 200px); }
+  }
 </style>
 </head>
 <body>

@@ -415,7 +415,7 @@ Paste your chapter text below this line, then hit send:
       <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;background:rgba(212,168,75,0.06);border:0.5px solid rgba(212,168,75,0.15);border-radius:6px;padding:8px 10px;">
         <strong style="color:var(--gold);">Tip:</strong> Unknown characters appear as <strong style="color:var(--text);">Character1</strong>, <strong style="color:var(--text);">Character2</strong> etc. Assign each a voice in the Character Voices tab.
       </div>
-      <textarea class="conv-textarea" id="convInput" placeholder="Narrator: It was a dark and stormy night..." style="min-height:160px;margin-bottom:10px;"></textarea>
+      <textarea class="conv-textarea" id="convInput" placeholder="Narrator: It was a dark and stormy night..." style="min-height:160px;margin-bottom:10px;" oninput="autoDecodeConvInput()"></textarea>
       <div style="display:flex;gap:10px;">
         <button class="conv-btn primary" onclick="sendToReader()">Send to book →</button>
         <button class="conv-btn" onclick="copyConvOutput2()">Copy</button>
@@ -1211,6 +1211,25 @@ Paste your chapter text below this line, then hit send:
   });
 }
 function copyConvOutput2() { const text=document.getElementById('convInput').value; navigator.clipboard.writeText(text).then(()=>showToast('Copied!')); }
+
+function autoDecodeConvInput() {
+  const el = document.getElementById('convInput');
+  const val = el.value;
+  // Check if it looks URL-encoded (contains %20 or %3A etc)
+  if (val.includes('%20') || val.includes('%3A') || val.includes('%0A')) {
+    try {
+      const decoded = decodeURIComponent(val.replace(/\+/g, ' '));
+      // Only replace if it actually changed
+      if (decoded !== val) {
+        const pos = el.selectionStart;
+        el.value = decoded;
+        el.selectionStart = el.selectionEnd = pos;
+      }
+    } catch(e) {
+      // Not valid URL encoding, leave it alone
+    }
+  }
+}
 
 function sendToReader() {
   const text=document.getElementById('convInput').value.trim();
